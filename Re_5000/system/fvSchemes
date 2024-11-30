@@ -1,0 +1,61 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  10
+     \\/     M anipulation  |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      fvSchemes;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+ddtSchemes
+{
+	default         Euler; // 1st order Euler implicit scheme
+}
+
+gradSchemes
+{
+	default         Gauss linear; // Second order linear scheme for gradients
+}
+
+divSchemes
+{
+	default         none;
+	div(phiv,p)		Gauss linear;
+	div(phi,K)      Gauss limitedLinear 1;
+	div(phi,e)		Gauss limitedLinear 1;
+	div(phi,(p|rho))	Gauss limitedLinear 1;
+    div(phi,U)      Gauss linearUpwindV grad(U); // Linear upwind for convective term
+    div(phi,k)      Gauss upwind; // Upwind for turbulence kinetic energy
+    div(phi,omega)  Gauss upwind; // Upwind for specific dissipation rate
+    div(phi,T)      Gauss linearUpwind grad(T); // Linear upwind for temperature
+    div(((rho*nuEff)*dev2(T(grad(U)))))		Gauss linear;
+}
+
+laplacianSchemes
+{
+	default         Gauss linear corrected;
+}
+
+interpolationSchemes
+{
+	default         linear;
+}
+
+snGradSchemes
+{
+	default         corrected;
+}
+
+wallDist
+{
+    method 			meshWave;
+}
+
+
+// ************************************************************************* //
