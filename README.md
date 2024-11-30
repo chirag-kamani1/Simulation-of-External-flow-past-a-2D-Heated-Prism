@@ -1,1 +1,0 @@
-# Simulation-of-External-flow-past-a-2D-Heated-Prism
