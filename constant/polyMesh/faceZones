@@ -10,43 +10,12 @@ FoamFile
     version     2.0;
     format      ascii;
     arch        "LSB;label=32;scalar=64";
-    class       volScalarField;
-    location    "0";
-    object      nut;
+    class       regIOobject;
+    location    "constant/polyMesh";
+    object      faceZones;
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
-dimensions      [ 0 2 -1 0 0 0 0 ];
-
-internalField   uniform 0;
-
-boundaryField
-{
-    frontBack
-    {
-        type            empty;
-    }
-    WALL
-    {
-        type            nutkWallFunction;
-        value           uniform 0;
-    }
-    OUTLET
-    {
-        type            calculated;
-        value           uniform 0;
-    }
-    INLET
-    {
-        type            calculated;
-        value           uniform 0;
-    }
-    PRISM
-    {
-        type            nutkWallFunction;
-        value           uniform 0;
-    }
-}
-
+0()
 
 // ************************************************************************* //

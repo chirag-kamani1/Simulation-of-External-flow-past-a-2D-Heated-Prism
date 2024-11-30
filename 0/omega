@@ -1,7 +1,7 @@
 /*--------------------------------*- C++ -*----------------------------------*\
 | =========                 |                                                 |
 | \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
-|  \\    /   O peration     | Version:  v2312                                 |
+|  \\    /   O peration     | Version:  v2012                                 |
 |   \\  /    A nd           | Website:  www.openfoam.com                      |
 |    \\/     M anipulation  |                                                 |
 \*---------------------------------------------------------------------------*/
@@ -14,31 +14,40 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+omegaInlet      10;
+
 dimensions      [0 0 -1 0 0 0 0];
 
-internalField   uniform 1.78;
+internalField   uniform $omegaInlet;
 
 boundaryField
 {
-    inlet
+    frontBack
     {
-        type            fixedValue;
-        value           $internalField;
+        type            empty;
     }
-
-    outlet
+    WALL
+    {
+        type            omegaWallFunction;
+        value           uniform $omegaInlet;
+    }
+    OUTLET
     {
         type            inletOutlet;
         inletValue      $internalField;
+        value           $internalField; 
+    }
+    INLET
+    {
+        type            turbulentMixingLengthFrequencyInlet;
+        mixingLength    0.0035;
         value           $internalField;
     }
-
-    "(frontAndBack|topAndBottom|square)"
+    PRISM
     {
         type            omegaWallFunction;
-        value           $internalField;
+        value           uniform $omegaInlet;
     }
 }
-
 
 // ************************************************************************* //

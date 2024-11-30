@@ -16,27 +16,32 @@ FoamFile
 
 dimensions      [0 2 -2 0 0 0 0];
 
-internalField   uniform 0.24;
+internalField   uniform 0.00325;
 
 boundaryField
 {
-    inlet
+    frontBack
     {
-        type            fixedValue;
-        value           $internalField;
+        type            empty;
     }
-
-    outlet
-    {
-        type            inletOutlet;
-        inletValue      $internalField;
-        value           $internalField;
-    }
-
-    "(frontAndBack|topAndBottom|square)"
+    WALL
     {
         type            kqRWallFunction;
-        value           $internalField;
+        value           uniform 0.00325;
+    }
+    OUTLET
+    {
+        type            zeroGradient;
+    }
+    INLET
+    {
+        type            kqRWallFunction;
+        value           uniform 0.00325;
+    }
+    PRISM
+    {
+        type            kqRWallFunction;
+        value           uniform 0.00325;
     }
 }
 

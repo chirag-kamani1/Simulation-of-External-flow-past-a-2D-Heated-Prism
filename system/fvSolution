@@ -1,13 +1,12 @@
 /*--------------------------------*- C++ -*----------------------------------*\
-| =========                 |                                                 |
-| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
-|  \\    /   O peration     | Version:  v2312                                 |
-|   \\  /    A nd           | Website:  www.openfoam.com                      |
-|    \\/     M anipulation  |                                                 |
+  =========                 |
+  \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox
+   \\    /   O peration     | Website:  https://openfoam.org
+    \\  /    A nd           | Version:  10
+     \\/     M anipulation  |
 \*---------------------------------------------------------------------------*/
 FoamFile
 {
-    version     2.0;
     format      ascii;
     class       dictionary;
     object      fvSolution;
@@ -16,44 +15,61 @@ FoamFile
 
 solvers
 {
-    "(p|pcorr)"
+    "(rho|rhoFinal)"
     {
-        solver          GAMG;
-        smoother        DICGaussSeidel;
-        tolerance       1e-06;
-        relTol          0.1;
-    }
-
-    "(p|pcorr)Final"
-    {
-        $p;
-        tolerance       1e-06;
+        solver          PCG;
+        preconditioner 	DIC;
+        tolerance       1e-7;
         relTol          0;
     }
 
-    "(U|k|omega)"
+    p_rgh
     {
-        solver          smoothSolver;
-        smoother        symGaussSeidel;
-        tolerance       1e-06;
+        solver           GAMG;
+        tolerance        1e-7;
+        relTol           0.01;
+
+        smoother         GaussSeidel;
+
+
+        maxIter          100;
+    }
+
+    "(U|e|k|omega)"
+    {
+        solver          PBiCGStab;
+        preconditioner  DILU;
+        tolerance       1e-6;
         relTol          0.1;
     }
 
-    "(U|k|omega)Final"
+    p_rghFinal
+    {
+        $p_rgh;
+        relTol         0;
+    }
+
+    "(U|e|k|omega)Final"
     {
         $U;
-        tolerance       1e-06;
         relTol          0;
     }
 }
 
-PIMPLE
+PISO
 {
-    momentumPredictor   yes;
-    nOuterCorrectors    3;
-    nCorrectors     1;
-    nNonOrthogonalCorrectors 0;
+    nCorrectors     2;
+    nNonOrthogonalCorrectors 1;
+    pRefCell        0;
+    pRefValue       0;
 }
 
+relaxationFactors
+{
+    equations
+    {
+        ".*" 1;
+    }
+}
 
 // ************************************************************************* //
